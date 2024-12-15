@@ -30,7 +30,7 @@ import { RequestItem } from '#hooks/useBatchManager';
 import { CONNECTOR_SOURCE_LEADS } from './LeadsPane/ConnectorSourceItem';
 import ProjectConnectorsPane from './ProjectConnectorsPane';
 import { CONNECTOR_SOURCES_COUNT } from '../queries';
-import LeadsPane from './LeadsPane';
+import LeadsPane, { getCsvUrlDerived } from './LeadsPane';
 import FormLeadsPane from './FormLeadsPane';
 import styles from './styles.css';
 
@@ -175,17 +175,43 @@ function UnifiedConnectorModal(props: Props) {
             onCloseButtonClick={onClose}
             bodyClassName={styles.modalBody}
             footerActions={(
-                <Button
-                    name={undefined}
-                    disabled={
-                        formPristine
-                        || bulkUpdateLeadsPending
-                        || submitableLeadsCount <= 0
-                    }
-                    onClick={handleSubmission}
-                >
-                    Save
-                </Button>
+                <>
+                    {getCsvUrlDerived() && (
+                        <Button
+                            name={undefined}
+                            disabled={
+                                formPristine
+                                || bulkUpdateLeadsPending
+                                || submitableLeadsCount <= 0
+                            }
+                            onClick={() => {
+                                const csvUrl = getCsvUrlDerived(); // Get the derived URL
+                                if (csvUrl) {
+                                    const link = document.createElement('a');
+                                    link.href = csvUrl;
+                                    link.download = 'leads.csv';
+                                    link.click();
+                                } else {
+                                    console.error('CSV URL is not available');
+                                }
+                            }}
+                            csv
+                        >
+                            Download CSV
+                        </Button>
+                    )}
+                    <Button
+                        name={undefined}
+                        disabled={
+                            formPristine
+                            || bulkUpdateLeadsPending
+                            || submitableLeadsCount <= 0
+                        }
+                        onClick={handleSubmission}
+                    >
+                        Save
+                    </Button>
+                </>
             )}
         >
             {bulkUpdateLeadsPending && <PendingMessage />}

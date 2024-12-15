@@ -58,17 +58,6 @@ function KoboParamsInput<T extends string>(props: Props<T>) {
                 error={getErrorString(error?.token)}
                 disabled={disabled}
             />
-            <DateDualRangeInput
-                label="Published At"
-                fromName="date_from"
-                toName="date_to"
-                fromOnChange={setParamsFieldValue}
-                toOnChange={setParamsFieldValue}
-                fromError={error?.date_from}
-                fromValue={value?.date_from}
-                toError={error?.date_to}
-                toValue={value?.date_to}
-            />
         </>
     );
 }

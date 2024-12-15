@@ -227,6 +227,7 @@ interface Props {
     setFormFieldValue: (...entries: EntriesAsList<PartialFormType>) => void;
     disabled: boolean;
 }
+let csvUrlDerived: string | undefined;
 
 function LeadsPane(props: Props) {
     const {
@@ -299,7 +300,16 @@ function LeadsPane(props: Props) {
             }
 
             const suggestedLead = connectorSourceLead.connectorLead;
+            let urlDerived;
 
+            try {
+                const urlObject = JSON.parse(suggestedLead.url.replace(/'/g, '"'));
+                urlDerived = urlObject.pdf;
+                csvUrlDerived = urlObject.csv;
+            } catch (error) {
+                urlDerived = suggestedLead.url;
+                csvUrlDerived = undefined;
+            }
             const newLead = {
                 clientId: randomString(),
                 sourceType: 'WEBSITE' as const,
@@ -308,7 +318,7 @@ function LeadsPane(props: Props) {
                 isAssessmentLead: false,
                 assignee: user?.id,
 
-                url: suggestedLead.url,
+                url: urlDerived,
                 title: suggestedLead.title,
                 publishedOn: suggestedLead.publishedOn,
                 authors: suggestedLead.authors.map((item) => item.id),
@@ -789,6 +799,10 @@ function LeadsPane(props: Props) {
             </div>
         </div>
     );
+}
+
+export function getCsvUrlDerived() {
+    return csvUrlDerived;
 }
 
 export default LeadsPane;
