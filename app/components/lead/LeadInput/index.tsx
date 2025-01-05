@@ -133,6 +133,7 @@ interface Props<N extends string | number | undefined> {
     pendingLeadOptions?: boolean;
     attachment: LeadType['attachment'] | undefined | null;
     hasAssessment?: boolean;
+    pussy?: string;
 }
 
 function LeadInput<N extends string | number | undefined>(props: Props<N>) {
@@ -158,6 +159,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         assigneeOptions,
         onAssigneeOptionChange,
         hasAssessment,
+        pussy,
     } = props;
 
     const { user } = useContext(UserContext);
@@ -410,6 +412,29 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     label="URL"
                     name="url"
                     value={value.url}
+                    onChange={setFieldValue}
+                    error={error?.url}
+                    readOnly={!!value.id}
+                    disabled={disabled}
+                    actions={(
+                        <QuickActionButton
+                            name="leadExtract"
+                            variant="action"
+                            onClick={handleLeadDataExtract}
+                            title="Auto-fill source information"
+                            disabled={disabled}
+                        >
+                            <IoEye />
+                        </QuickActionButton>
+                    )}
+                />
+            )}
+            {value.sourceType === 'WEBSITE' && (
+                <TextInput
+                    className={styles.input}
+                    label="URL"
+                    name="url"
+                    value={pussy}
                     onChange={setFieldValue}
                     error={error?.url}
                     readOnly={!!value.id}

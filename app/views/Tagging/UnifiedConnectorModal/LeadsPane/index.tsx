@@ -319,6 +319,7 @@ function LeadsPane(props: Props) {
                 assignee: user?.id,
 
                 url: urlDerived,
+                csvUrl: csvUrlDerived,
                 title: suggestedLead.title,
                 publishedOn: suggestedLead.publishedOn,
                 authors: suggestedLead.authors.map((item) => item.id),
@@ -734,6 +735,25 @@ function LeadsPane(props: Props) {
                         contentClassName={styles.content}
                         headerActions={(
                             <>
+                                {getCsvUrlDerived() && (
+                                    <Button
+                                        name={undefined}
+                                        onClick={() => {
+                                            const csvUrl = getCsvUrlDerived();
+                                            if (csvUrl) {
+                                                const link = document.createElement('a');
+                                                link.href = csvUrl;
+                                                link.download = 'leads.csv';
+                                                link.click();
+                                            } else {
+                                                console.error('CSV URL is not available');
+                                            }
+                                        }}
+                                        csv
+                                    >
+                                        CSV
+                                    </Button>
+                                )}
                                 <Button
                                     name={selectedConnectorSourceLead}
                                     onClick={handleIgnoreLeadButtonClick}
